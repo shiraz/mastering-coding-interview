@@ -20,21 +20,34 @@ class LinkedList {
       return this.append(value);
     }
 
-    let currentNode = this.head;
-    let currentIndex = 0;
+    const newNode = { value, next: null };
+    const traversedNode = this.traverseToIndex(index - 1);
 
-    while(currentNode !== null) {
-      if (currentIndex === index - 1) {
-        const newNode = { value, next: null };
-        const origNextNode = currentNode.next;
-        currentNode.next = newNode;
-        newNode.next = origNextNode;
-        this.length++;
-        return this;
-      }
-      currentNode = currentNode.next;
-      currentIndex++;
+    if (traversedNode) {
+      const origNextNode = traversedNode.next;
+      traversedNode.next = newNode;
+      newNode.next = origNextNode;
+      this.length++;
+      return this;
     }
+
+    return null;
+
+    // let currentNode = this.head;
+    // let currentIndex = 0;
+
+    // while (currentNode !== null) {
+    //   if (currentIndex === index - 1) {
+    //     const newNode = { value, next: null };
+    //     const origNextNode = currentNode.next;
+    //     currentNode.next = newNode;
+    //     newNode.next = origNextNode;
+    //     this.length++;
+    //     return this;
+    //   }
+    //   currentNode = currentNode.next;
+    //   currentIndex++;
+    // }
   }
 
   prepend(value) {
@@ -48,30 +61,84 @@ class LinkedList {
   printList() {
     const array = [];
     let currentNode = this.head;
-    
-    while(currentNode !== null ) {
-        array.push(currentNode.value);
-        currentNode = currentNode.next;
+
+    while (currentNode !== null) {
+      array.push(currentNode.value);
+      currentNode = currentNode.next;
     }
 
-    return array;
+    return {
+      outputArray: array,
+      linkedList: this
+    };
   }
 
   remove(index) {
-    // TODO.
+    if (index < 0 || index > this.length) {
+      return null;
+    }
+
+    // This is the instructor solution and it doesn't work when you have to delete the last node in the list.
+    // const traversedNode = this.traverseToIndex(index - 1);
+    // const nodeToDelete = traversedNode.next;
+    // traversedNode.next = nodeToDelete.next;
+    // this.length--;
+    // return this;
+
+    if (index === 0) {
+      this.head = this.head.next;
+      this.length--;
+      return this;
+    }
+
+    const traversedNode = this.traverseToIndex(index - 1);
+
+    if (traversedNode) {
+      const nextTraversedNode = this.traverseToIndex(index + 1);
+      delete traversedNode.next;
+      traversedNode.next = nextTraversedNode;
+      this.length--;
+
+      if (this.length === index) {
+        this.tail = {
+          value: traversedNode.value,
+          next: null,
+        };
+      }
+
+      return this;
+    }
   }
 
+  traverseToIndex(index) {
+    if (index >= this.length) {
+      return null;
+    }
+
+    let currentNode = this.head;
+    let currentIndex = 0;
+
+    while (currentIndex !== index) {
+      currentNode = currentNode.next;
+      currentIndex++;
+    }
+
+    return currentNode;
+  }
 }
 
 const myLinkedList = new LinkedList(10);
-console.log(myLinkedList);
 myLinkedList.append(5);
-console.log(myLinkedList);
 myLinkedList.append(16);
-console.log(myLinkedList);
 myLinkedList.prepend(1);
 console.log(myLinkedList.printList());
 myLinkedList.insert(2, 99);
 console.log(myLinkedList.printList());
 myLinkedList.insert(200, 100);
+console.log(myLinkedList.printList());
+myLinkedList.remove(2);
+console.log(myLinkedList.printList());
+myLinkedList.remove(4);
+console.log(myLinkedList.printList());
+myLinkedList.remove(0);
 console.log(myLinkedList.printList());
