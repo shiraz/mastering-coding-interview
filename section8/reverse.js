@@ -32,22 +32,6 @@ class LinkedList {
     }
 
     return null;
-
-    // let currentNode = this.head;
-    // let currentIndex = 0;
-
-    // while (currentNode !== null) {
-    //   if (currentIndex === index - 1) {
-    //     const newNode = { value, next: null };
-    //     const origNextNode = currentNode.next;
-    //     currentNode.next = newNode;
-    //     newNode.next = origNextNode;
-    //     this.length++;
-    //     return this;
-    //   }
-    //   currentNode = currentNode.next;
-    //   currentIndex++;
-    // }
   }
 
   prepend(value) {
@@ -69,7 +53,7 @@ class LinkedList {
 
     return {
       outputArray: array,
-      linkedList: this
+      linkedList: this,
     };
   }
 
@@ -77,13 +61,6 @@ class LinkedList {
     if (index < 0 || index > this.length) {
       return null;
     }
-
-    // This is the instructor solution and it doesn't work when you have to delete the last node in the list.
-    // const traversedNode = this.traverseToIndex(index - 1);
-    // const nodeToDelete = traversedNode.next;
-    // traversedNode.next = nodeToDelete.next;
-    // this.length--;
-    // return this;
 
     if (index === 0) {
       this.head = this.head.next;
@@ -110,6 +87,51 @@ class LinkedList {
     }
   }
 
+  reverse() {
+    // My solution.
+    /*
+    if (this.length === 1) {
+        return this;
+    }
+
+    let currentNode = this.head;
+    let currentIndex = 0;
+    const newLinkedList = new this.constructor(this.head.value);
+
+    while (currentIndex < this.length) {
+      if (currentIndex > 0) {
+          newLinkedList.prepend(currentNode.value);
+      }
+      currentNode = currentNode.next;
+      currentIndex++;
+    }
+
+    this.head = newLinkedList.head;
+    this.tail = newLinkedList.tail;
+
+    return this;
+    */
+
+    // Instructor solution.
+    if (!this.head.next) {
+        return this.head;
+    }
+
+    let first = this.head;
+    this.tail = this.head;
+    let second = first.next;
+
+    while(second) {
+        const temp = second.next;
+        second.next = first;
+        first = second;
+        second = temp;
+    }
+
+    this.head.next = null;
+    this.head = first;
+  }
+
   traverseToIndex(index) {
     if (index >= this.length) {
       return null;
@@ -132,13 +154,15 @@ myLinkedList.append(5);
 myLinkedList.append(16);
 myLinkedList.prepend(1);
 console.log(myLinkedList.printList());
-myLinkedList.insert(2, 99);
-console.log(myLinkedList.printList());
-myLinkedList.insert(200, 100);
-console.log(myLinkedList.printList());
-myLinkedList.remove(2);
-console.log(myLinkedList.printList());
-myLinkedList.remove(4);
-console.log(myLinkedList.printList());
-myLinkedList.remove(0);
+//   myLinkedList.insert(2, 99);
+//   console.log(myLinkedList.printList());
+//   myLinkedList.insert(200, 100);
+//   console.log(myLinkedList.printList());
+//   myLinkedList.remove(2);
+//   console.log(myLinkedList.printList());
+//   myLinkedList.remove(4);
+//   console.log(myLinkedList.printList());
+//   myLinkedList.remove(0);
+//   console.log(myLinkedList.printList());
+myLinkedList.reverse();
 console.log(myLinkedList.printList());
